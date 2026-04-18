@@ -1,0 +1,672 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties ─────────────────────────────────── */
+:root {
+  --color-obsidian:        #030712;
+  --color-sidebar:         #0B1117;
+  --color-sidebar-border:  #1F2937;
+  --color-accent-cyan:     #22D3EE;
+  --color-accent-violet:   #7C3AED;
+  --color-accent-emerald:  #10B981;
+  --color-text-primary:    #F9FAFB;
+  --color-text-muted:      #6B7280;
+  --color-text-subtle:     #374151;
+
+  --font-inter: 'Inter', system-ui, sans-serif;
+}
+
+/* ─── Base Reset & Global Theme ─────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    height: 100%;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    height: 100%;
+    background-color: #030712;
+    color: #F9FAFB;
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden;
+  }
+
+  #__next,
+  main {
+    height: 100%;
+  }
+
+  /* Typography scale */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: #F9FAFB;
+    line-height: 1.2;
+  }
+
+  p, span, li, label {
+    letter-spacing: -0.01em;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #030712;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1F2937;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #374151;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: rgba(34, 211, 238, 0.2);
+    color: #F9FAFB;
+  }
+}
+
+/* ─── Layout Components ──────────────────────────────────────── */
+@layer components {
+
+  /* Root app shell */
+  .app-shell {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: #030712;
+  }
+
+  /* ── Intelligence Sidebar (30%) ── */
+  .intelligence-sidebar {
+    width: 30%;
+    min-width: 280px;
+    max-width: 420px;
+    height: 100%;
+    background-color: #0B1117;
+    border-right: 1px solid #1F2937;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+
+    /* Subtle inner glow */
+    box-shadow:
+      inset -1px 0 0 #1F2937,
+      4px 0 24px -4px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Sidebar header zone */
+  .sidebar-header {
+    padding: 1.5rem 1.25rem 1rem;
+    border-bottom: 1px solid #1F2937;
+    flex-shrink: 0;
+  }
+
+  /* Sidebar content zone */
+  .sidebar-content {
+    padding: 1rem 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Sidebar section */
+  .sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6B7280;
+    margin-bottom: 0.25rem;
+  }
+
+  /* ── Main Stage (70%) ── */
+  .main-stage {
+    flex: 1;
+    height: 100%;
+    background-color: #030712;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Map container fills the main stage */
+  .map-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  /* ── Glassmorphism card ── */
+  .glass-card {
+    background: rgba(11, 17, 23, 0.7);
+    border: 1px solid #1F2937;
+    border-radius: 10px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 1rem 1.25rem;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+  .glass-card:hover {
+    border-color: rgba(34, 211, 238, 0.2);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.04);
+  }
+
+  /* ── Accent badge ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .badge-cyan {
+    background: rgba(34, 211, 238, 0.1);
+    color: #22D3EE;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+  }
+  .badge-violet {
+    background: rgba(124, 58, 237, 0.1);
+    color: #A78BFA;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+  }
+  .badge-emerald {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  /* ── Stat item ── */
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: #F9FAFB;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: #6B7280;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #1F2937 20%, #1F2937 80%, transparent);
+  }
+
+  /* ── Pulse dot ── */
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+  @keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0   rgba(16, 185, 129, 0.4); }
+    70%  { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0   rgba(16, 185, 129, 0); }
+  }
+
+  /* ── Animated underline link ── */
+  .underline-link {
+    position: relative;
+    color: #22D3EE;
+    text-decoration: none;
+  }
+  .underline-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #22D3EE;
+    transition: width 200ms ease;
+  }
+  .underline-link:hover::after {
+    width: 100%;
+  }
+
+  /* ── Incident Card ── */
+  .incident-card {
+    background: rgba(11, 17, 23, 0.6);
+    border: 1px solid #1F2937;
+    border-left: 2px solid var(--accent-color, #22D3EE);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    cursor: default;
+  }
+  .incident-card:hover {
+    background: rgba(11, 17, 23, 0.85);
+    border-color: #374151;
+    border-left-color: var(--accent-color, #22D3EE);
+    transform: translateX(2px);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+  }
+  .incident-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .incident-rank {
+    font-size: 9px;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: 0.08em;
+  }
+  .incident-severity {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .incident-satellite {
+    font-size: 9px;
+    color: #4B5563;
+    font-family: 'Inter', monospace;
+    letter-spacing: 0.06em;
+  }
+  .incident-coord {
+    font-size: 11px;
+    font-weight: 600;
+    color: #D1D5DB;
+    font-family: 'Inter', monospace;
+    letter-spacing: 0.02em;
+  }
+  .incident-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .incident-meta span {
+    font-size: 9px;
+    color: #4B5563;
+    letter-spacing: 0.06em;
+    font-family: 'Inter', monospace;
+  }
+
+  /* ── Severity bar ── */
+  .severity-bar-track {
+    height: 2px;
+    background: #1F2937;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .severity-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 400ms ease;
+    opacity: 0.8;
+  }
+
+  /* ── Panel label (shared) ── */
+  .panel-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6B7280;
+  }
+
+  /* ── Why This Matters narrative panel ── */
+  .panel-narrative {
+    background: rgba(11, 17, 23, 0.6);
+    border: 1px solid #1F2937;
+    border-top: 2px solid rgba(251, 191, 36, 0.5);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .panel-narrative-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-narrative-body {
+    font-size: 11px;
+    color: #9CA3AF;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+  }
+  .panel-narrative-stats {
+    display: flex;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #1F2937;
+  }
+  .panel-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  .panel-stat-value {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Inter', monospace;
+    letter-spacing: -0.02em;
+  }
+  .panel-stat-label {
+    font-size: 9px;
+    color: #4B5563;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── Who Controls the Rail panel ── */
+  .panel-rail {
+    background: rgba(11, 17, 23, 0.6);
+    border: 1px solid #1F2937;
+    border-top: 2px solid rgba(34, 211, 238, 0.4);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .panel-rail-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-rail-subtitle {
+    font-size: 11px;
+    color: #9CA3AF;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+  }
+  .panel-rail-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid #1F2937;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .panel-rail-table-header {
+    display: grid;
+    grid-template-columns: 72px 1fr 1fr;
+    gap: 0;
+    background: rgba(34, 211, 238, 0.06);
+    border-bottom: 1px solid #1F2937;
+    padding: 6px 10px;
+  }
+  .panel-rail-table-header span {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #22D3EE;
+  }
+  .panel-rail-row {
+    display: grid;
+    grid-template-columns: 72px 1fr 1fr;
+    gap: 0;
+    padding: 7px 10px;
+    border-bottom: 1px solid #111827;
+    transition: background 150ms ease;
+  }
+  .panel-rail-row:last-child {
+    border-bottom: none;
+  }
+  .panel-rail-row:hover {
+    background: rgba(34, 211, 238, 0.03);
+  }
+  .panel-rail-agency {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-family: 'Inter', monospace;
+  }
+  .panel-rail-role {
+    font-size: 9px;
+    color: #9CA3AF;
+    line-height: 1.4;
+    padding-right: 4px;
+  }
+  .panel-rail-protocol {
+    font-size: 9px;
+    color: #4B5563;
+    font-family: 'Inter', monospace;
+    letter-spacing: 0.04em;
+  }
+  .panel-rail-footnote {
+    font-size: 9px;
+    color: #374151;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    padding-top: 4px;
+    border-top: 1px solid #1F2937;
+  }
+
+  /* ── Download AOI button ── */
+  .download-aoi-btn {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: rgba(11, 17, 23, 0.9);
+    border: 1px solid #1F2937;
+    border-radius: 999px;
+    color: #22D3EE;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+    font-family: 'Inter', system-ui, sans-serif;
+    white-space: nowrap;
+  }
+  .download-aoi-btn:hover {
+    border-color: rgba(34, 211, 238, 0.4);
+    box-shadow: 0 0 16px rgba(34, 211, 238, 0.12), 0 4px 20px rgba(0,0,0,0.4);
+    background: rgba(34, 211, 238, 0.05);
+  }
+  .download-aoi-btn:active {
+    transform: translateX(-50%) scale(0.97);
+  }
+}
+
+/* ─── Utilities ─────────────────────────────────────────────── */
+@layer utilities {
+  .font-inter       { font-family: 'Inter', system-ui, sans-serif; }
+  .tracking-tight   { letter-spacing: -0.02em; }
+  .tracking-tighter { letter-spacing: -0.04em; }
+  .tracking-wide-sm { letter-spacing: 0.06em; }
+
+  .text-obsidian    { color: #030712; }
+  .text-sidebar     { color: #0B1117; }
+  .text-primary     { color: #F9FAFB; }
+  .text-muted       { color: #6B7280; }
+  .text-subtle      { color: #374151; }
+  .text-accent-cyan { color: #22D3EE; }
+
+  .bg-obsidian      { background-color: #030712; }
+  .bg-sidebar       { background-color: #0B1117; }
+
+  .border-sidebar   { border-color: #1F2937; }
+
+  /* Gradient text utility */
+  .gradient-text {
+    background: linear-gradient(135deg, #22D3EE, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* --- Leaflet Customisations ---------------------------------- */
+
+.leaflet-container {
+  font-family: var(--font-inter);
+}
+
+/* ── Hotspot glow tiers applied to Leaflet SVG <path> elements ── */
+
+/* Critical (confidence ≥ 80) — pulsing red glow */
+.hotspot-glow-critical {
+  filter: drop-shadow(0 0 6px #FF4136);
+  animation: hotspot-pulse-critical 1.6s ease-in-out infinite;
+}
+@keyframes hotspot-pulse-critical {
+  0%   { opacity: 0.75; filter: drop-shadow(0 0 4px #FF4136); }
+  50%  { opacity: 1;    filter: drop-shadow(0 0 14px #FF4136) drop-shadow(0 0 6px rgba(255,65,54,0.5)); }
+  100% { opacity: 0.75; filter: drop-shadow(0 0 4px #FF4136); }
+}
+
+/* Medium (confidence 60–79) — steady amber glow */
+.hotspot-glow-medium {
+  filter: drop-shadow(0 0 5px #F59E0B);
+  animation: hotspot-pulse-medium 2.2s ease-in-out infinite;
+}
+@keyframes hotspot-pulse-medium {
+  0%   { opacity: 0.7; filter: drop-shadow(0 0 3px #F59E0B); }
+  50%  { opacity: 1;   filter: drop-shadow(0 0 10px #F59E0B); }
+  100% { opacity: 0.7; filter: drop-shadow(0 0 3px #F59E0B); }
+}
+
+/* Low (confidence < 60) — subtle cyan fill, no glow animation */
+.hotspot-marker-low {
+  filter: none;
+}
+
+.hotspot-popup .leaflet-popup-content-wrapper {
+  background: rgba(11, 17, 23, 0.9);
+  color: #F9FAFB;
+  border: 1px solid #1F2937;
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  padding: 0;
+}
+
+.hotspot-popup .leaflet-popup-tip {
+  background: #1F2937;
+}
+
+.hotspot-popup .leaflet-popup-content {
+  margin: 12px;
+  line-height: 1.4;
+}
+
+.leaflet-control-zoom {
+  border: 1px solid #1F2937 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.leaflet-control-zoom a {
+  background: #0B1117 !important;
+  color: #6B7280 !important;
+  border-bottom: 1px solid #1F2937 !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #1F2937 !important;
+  color: #22D3EE !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(3, 7, 18, 0.8) !important;
+  color: #374151 !important;
+  font-size: 9px !important;
+}
+
+.leaflet-control-attribution a {
+  color: #6B7280 !important;
+}
+
+/* ── Final Phase 5 Polish: Real-time Data Pulse & UX ── */
+
+@keyframes hotspot-pulse-realtime {
+  0%   { transform: scale(1);   opacity: 0.9; }
+  50%  { transform: scale(1.4); opacity: 0.4; }
+  100% { transform: scale(1);   opacity: 0.9; }
+}
+
+.hotspot-pulse-realtime {
+  animation: hotspot-pulse-realtime 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* 0.5px Cyan Glow for premium interactive feel */
+button:hover, 
+.download-aoi-btn:hover, 
+.incident-card:hover {
+  box-shadow: 0 0 15px rgba(34, 211, 238, 0.15), 0 0 0 0.5px rgba(34, 211, 238, 0.2);
+  border-color: rgba(34, 211, 238, 0.4) !important;
+}
+
+.hotspot-tooltip {
+  background: rgba(11, 17, 23, 0.95) !important;
+  border: 1px solid #1F2937 !important;
+  border-radius: 4px !important;
+  color: #F9FAFB !important;
+  font-size: 10px !important;
+  font-family: 'Inter', monospace !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
+  backdrop-filter: blur(8px);
+}
+
+.leaflet-tooltip-left:before { border-left-color: #1F2937 !important; }
+.leaflet-tooltip-right:before { border-right-color: #1F2937 !important; }
+
