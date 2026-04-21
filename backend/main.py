@@ -28,9 +28,14 @@ from typing import Optional
 
 import httpx
 import pandas as pd
+from dotenv import load_dotenv
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+
+# ── Environment Initialization ──────────────────────────────────────────────
+# Load .env file and override system variables to ensure .env takes priority
+load_dotenv(override=True)
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -41,10 +46,22 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ── Configuration (env-overridable) ──────────────────────────────────────────
-NASA_FIRMS_URL: str = os.getenv(
-    "NASA_FIRMS_URL",
-    "https://firms.modaps.eosdis.nasa.gov/active_fire/c6.1/csv/MODIS_C6_1_Global_7d.csv",
-)
+NASA_API_KEY: str = os.getenv("NASA_API_KEY", "").strip()
+NASA_FIRMS_URL: str = os.getenv("NASA_FIRMS_URL", "").strip()
+
+# PRIORITY: If API Key is provided, upgrade to the authenticated MAPS API
+if NASA_API_KEY:
+    # Use the 'area' endpoint with a global bounding box for the most reliable response
+    # Format: /api/area/csv/[KEY]/[SOURCE]/[WEST,SOUTH,EAST,NORTH]/[DAY_RANGE]
+    NASA_FIRMS_URL = f"https://firms.modaps.eosdis.nasa.gov/api/area/csv/{NASA_API_KEY}/MODIS_NRT/-180,-90,180,90/7"
+    logger.info("📡 Using NASA FIRMS MAPS API (Key-authenticated)")
+elif not NASA_FIRMS_URL:
+    # FALLBACK: Use public feed only if no key and no manual URL is provided
+    NASA_FIRMS_URL = "https://firms.modaps.eosdis.nasa.gov/active_fire/c6.1/csv/MODIS_C6_1_Global_7d.csv"
+    logger.info("🌐 Using NASA FIRMS Public CSV Feed (No key provided)")
+else:
+    # MANUAL: Use the specific URL provided in the environment
+    logger.info(f"🔗 Using manual NASA_FIRMS_URL: {NASA_FIRMS_URL}")
 CACHE_TTL: int = int(os.getenv("CACHE_TTL_SECONDS", "300"))   # 5 minutes
 BACKEND_PORT: int = int(os.getenv("BACKEND_PORT", "8000"))
 FRONTEND_ORIGIN: str = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")
